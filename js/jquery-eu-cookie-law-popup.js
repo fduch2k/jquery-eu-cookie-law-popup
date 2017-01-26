@@ -125,6 +125,9 @@ $.fn.euCookieLawPopup = (function() {
 			if (typeof settings.htmlMarkup !== 'undefined') {
 				_self.params.htmlMarkup = settings.htmlMarkup;
 			}
+			if (typeof settings.domain !== 'undefined') {
+				_self.params.domain = settings.domain;
+			}
 		}
 
 	};
@@ -161,7 +164,11 @@ $.fn.euCookieLawPopup = (function() {
 		var expiresInDays = _self.params.agreementExpiresInDays * 24 * 60 * 60 * 1000;
 		d.setTime( d.getTime() + expiresInDays );
 		var expires = "expires=" + d.toGMTString();
-		document.cookie = _self.vars.COOKIE_NAME + '=' + consent + "; " + expires + ";path=/";
+		var params = [consent, expires, 'path=/'];
+		if (_self.params.domain) {
+			params.push('domain=' + _self.params.domain);
+		}
+		document.cookie = _self.vars.COOKIE_NAME + '=' + params.join(';');
 
 		$(document).trigger("user_cookie_consent_changed", {'consent' : consent});
 	};
